@@ -19,8 +19,8 @@ from django.urls import path
 from .views import *
 
 urlpatterns = [
-    path('signup/', SignupView.as_view()),
-    path('signin/', SigninView.as_view()),
-    path('verify/<int:id>/<str:otp>', AccountVerificationView.as_view()),
+    path('signup', SignupView.as_view(), name='signup'),
+    path('signin', SigninView.as_view(), name='signin'),
+    path('verify/<int:id>/<str:otp>', AccountVerificationView.as_view(), name='account-verification'),
     
 ]
