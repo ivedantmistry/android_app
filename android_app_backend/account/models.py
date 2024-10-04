@@ -45,6 +45,7 @@ class User(AbstractUser):
     phone_number = models.CharField(max_length=20)
     username = models.CharField(max_length=255, unique=False, blank=True)
     uuid = models.UUIDField(default=uuid4, editable=False)
+    email_verified = models.BooleanField(default=False)
     is_verified = models.BooleanField(default=False)
     status = models.CharField(choices=STATUS, max_length=20)
     

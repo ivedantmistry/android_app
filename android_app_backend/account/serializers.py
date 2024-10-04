@@ -26,6 +26,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
         self.validated_data.pop('password2')
         user = super().save(*args, **kwargs)
         user.set_password(password1)
+        user.save()
         return user
 
 class AvatarSerializer(serializers.Serializer):

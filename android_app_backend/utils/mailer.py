@@ -37,8 +37,9 @@ class Mailer:
             assert self.subject is not None, "provide a mail subject"
             #ensure that the email message was provided
             assert self.message is not None, "provide a mail message"
-            connection = get_connection('django.core.mail.backends.console.EmailBackend')
-            send_mail(self.subject,self.message,self.sender_email,self.receiver_email_list, connection=connection, fail_silently=False)
+            console_connection = get_connection('django.core.mail.backends.console.EmailBackend')
+            test_connection = get_connection('django.core.mail.backends.locmem.EmailBackend')
+            send_mail(self.subject,self.message,self.sender_email,self.receiver_email_list, connection=test_connection, fail_silently=False)
             
         except AssertionError as err:
             #catch and handle the resulting Assertion Error
