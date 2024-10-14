@@ -10,6 +10,10 @@ from rest_framework import generics
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
+from oauth2_provider.models import AccessToken
+from oauth2_provider.settings import oauth2_settings
+from oauth2_provider.oauth2_backends import get_oauthlib_core
+
 from utils.mailer import Mailer
 from utils.otp import UserOtp
 from utils.helper import *
@@ -196,12 +200,13 @@ class SigninView(APIView):
             user = User.objects.get(email=request.data['email'].lower())
             if user.check_password(password):
                 if user.email_verified:
-                    refresh = CustomRefreshToken(user_id=user.id, email=user.email, user_type='buyer')
+                    # Use OAuth2 Access Token
+                    oauthlib_core = get_oauthlib_core()
+                    token_data = oauthlib_core.create_token_response(
+                        request._request
+                    )[1]
                     
                     user_logged_in.send(sender=user.__class__, request=request, user=user)
-                    data["message"] = "Login successful, User Authenticated!"
-                    data["token"] = str(refresh.access_token)
-                    data['refresh'] = str(refresh)
                     
                     return custom_response(
                         status="success",

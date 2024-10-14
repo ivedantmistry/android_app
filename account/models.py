@@ -6,6 +6,8 @@ from django.utils.crypto import get_random_string
 from django.utils import timezone
 from uuid import uuid4
 import datetime
+from oauth2_provider.models import AccessToken, RefreshToken
+from oauth2_provider.settings import oauth2_settings
 
 class UserManager(BaseUserManager):
     def create_user(self, email, password, **other_fields):
@@ -60,6 +62,24 @@ class User(AbstractUser):
     def full_name(self):
         return f'{self.first_name} {self.last_name}'
 
+    def generate_tokens(self):
+        """Generate access and refresh tokens for the user."""
+        access_token = AccessToken.objects.create(
+            user=self,
+            expires=timezone.now() + oauth2_settings.ACCESS_TOKEN_EXPIRE_SECONDS,
+            scope='read write'
+        )
+
+        refresh_token = RefreshToken.objects.create(
+            user=self,
+            access_token=access_token,
+            token=get_random_string(length=30)
+        )
+
+        return {
+            'access_token': access_token.token,
+            'refresh_token': refresh_token.token,
+        }
 
 class OTP(models.Model):
     EVENT_CHOICES = (
