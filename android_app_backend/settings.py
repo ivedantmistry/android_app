@@ -34,6 +34,8 @@ INSTALLED_APPS = [
     'drf_yasg',
     'rest_framework',
     'rest_framework_simplejwt',
+
+    'oauth2_provider',  # Add OAuth2 provider
     
     #Created apps
     'account',
@@ -152,16 +154,17 @@ SWAGGER_SETTINGS = {
 
 #Rest_Framework Configuration
 REST_FRAMEWORK = {
-    'DEFAULT_SCHEMA_CLASS':'rest_framework.schemas.coreapi.AutoSchema',
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
     'DEFAULT_AUTHENTICATION_CLASSES': [
-            'rest_framework_simplejwt.authentication.JWTAuthentication',
-        ],
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',  # Use OAuth2 Authentication
+    ],
     'DEFAULT_PARSER_CLASSES': [
         'rest_framework.parsers.JSONParser',
         'rest_framework.parsers.FormParser',
         'rest_framework.parsers.MultiPartParser',
     ],
 }
+
 
 
 SIMPLE_JWT = {
